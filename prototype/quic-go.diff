@@ -1,0 +1,326 @@
+diff --git a/conn.go b/conn.go
+index 700c1471..197b2086 100644
+--- a/conn.go
++++ b/conn.go
+@@ -1,6 +1,8 @@
+ package quic
+ 
+ import (
++	"bytes"
++	"encoding/binary"
+ 	"net"
+ 	"sync"
+ )
+@@ -12,6 +14,7 @@ type connection interface {
+ 	LocalAddr() net.Addr
+ 	RemoteAddr() net.Addr
+ 	SetCurrentRemoteAddr(net.Addr)
++	SetQUICSR([]string, []byte)
+ }
+ 
+ type conn struct {
+@@ -19,17 +22,28 @@ type conn struct {
+ 
+ 	pconn       net.PacketConn
+ 	currentAddr net.Addr
++	nhopAddr    net.Addr
++	QUICSRH     []byte
++	segmentList []string
++	flowid      []byte
+ }
+ 
+ var _ connection = &conn{}
+ 
+ func (c *conn) Write(p []byte) error {
+-	_, err := c.pconn.WriteTo(p, c.currentAddr)
++	if c.QUICSRH == nil {
++		_, err := c.pconn.WriteTo(p, c.currentAddr)
++		return err
++	}
++	buf := bytes.NewBuffer(c.QUICSRH)
++	buf.Write(p)
++	_, err := c.pconn.WriteTo(buf.Bytes(), c.nhopAddr)
+ 	return err
+ }
+ 
+ func (c *conn) Read(p []byte) (int, net.Addr, error) {
+ 	return c.pconn.ReadFrom(p)
++
+ }
+ 
+ func (c *conn) SetCurrentRemoteAddr(addr net.Addr) {
+@@ -52,3 +66,207 @@ func (c *conn) RemoteAddr() net.Addr {
+ func (c *conn) Close() error {
+ 	return c.pconn.Close()
+ }
++
++/*
++    0                   1                   2                   3
++    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |0 0 0 0 0 0 0 0|    Length     | FlowID Length |   AF Type     |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |                                                               |
++   +                                                               +
++   |                                                               |
++   +                            Flow ID                            +
++   |                                                               |
++   +                                                               +
++   |                                                               |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |                       Source IP Address                       |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   | Source Port                   |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |  SR Type      |   SRH Len     |    LastEntry  |  Segment Left |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |                       SegmentList[0]                          |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |                       SegmentList[1]                          |
++
++   ~                           ...                                 ~
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |                       SegmentList[N]                          |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++   |                        Options                                |
++   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++
++   AFType = 0:IPv4  1:IPv6
++   SRType: 0:  Linkstate probe
++   SRType: 1:  32+16 bit IPv4 socket
++   SRType: 2: 128+16 bit IPv6 socket
++   SRType: 3:  32 bit Label, require etcd mapping forward udp socket
++   SRType: 4: 128 bit Label, interworking with SRv6
++
++*/
++
++func (c *conn) SetQUICSR(seglist []string, flowid []byte) {
++	if len(seglist) == 0 {
++		return
++	}
++
++	//add header and flowid
++	buf := bytes.NewBuffer([]byte{0, 0, 0, 0})
++	flowidLen, _ := buf.Write(flowid)
++
++	var aftype uint8 = 1
++
++	//check destination AF and add allocate source segment
++	//source segment will be add by 1st segment router
++	//we preallocate it to avoid MTU issue in middle routers
++	uaddr, _ := net.ResolveUDPAddr("udp", c.currentAddr.String())
++	if uaddr.IP.To4() == nil {
++		buf.Write(make([]byte, 18))
++		aftype = 2
++	} else {
++		buf.Write(make([]byte, 6))
++	}
++
++	//add SRH
++	srh := c.buildSRH(seglist)
++	if srh == nil {
++		//TODO: need error handling
++		return
++	}
++
++	buf.Write(srh)
++
++	nhop := ByteToNetAddr(StrToByte(seglist[0]))
++
++	quicSRH := buf.Bytes()
++	/* set QUICSR Header
++	   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++	   |0 0 0 0 0 0 0 0|    Length     | FlowID Length |   AF Type     |
++	   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+*/
++
++	quicSRH[0] = uint8(0)
++	quicSRH[1] = uint8(len(quicSRH))
++	quicSRH[2] = uint8(flowidLen)
++	quicSRH[3] = aftype
++
++	c.mutex.Lock()
++	c.QUICSRH = make([]byte, len(quicSRH))
++	copy(c.QUICSRH, quicSRH)
++	c.segmentList = make([]string, len(seglist))
++	copy(c.segmentList, seglist)
++	c.flowid = make([]byte, len(flowid))
++	copy(c.flowid, flowid)
++	c.nhopAddr = nhop
++	c.mutex.Unlock()
++}
++
++//buildSRH is used to build segment routing header by seglist
++func (c *conn) buildSRH(seglist []string) []byte {
++	segListLen := len(seglist)
++	if segListLen == 0 {
++		return nil
++	}
++	//append srh
++	buf := bytes.NewBuffer([]byte{0x0, 0x0, 0x0, 0x0})
++
++	//append remote socket info in seg[0]
++	segment := StrToByte(c.currentAddr.String())
++	if segment == nil {
++		return nil
++	}
++
++	buf.Write(segment)
++	//default IPv4 adress family is IPv4 with 6Bytes(4byte IP + 2byte port) segment length
++	var aftype uint8 = 1
++	seglen := 6
++
++	//update for IPv6 address family 18Bytes (16bytes IPv6 + 2Bytes Port) segment length
++	if len(segment) == 18 {
++		aftype = 2
++		seglen = 18
++	}
++
++	for i := segListLen; i > 0; i-- {
++		segment = StrToByte(seglist[i-1])
++		if segment == nil {
++			return nil
++		}
++		//invalid address type
++		if len(segment) != seglen {
++			return nil
++		}
++		buf.Write(segment)
++	}
++	result := buf.Bytes()
++
++	/* update SRHeader field
++	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++	|  SR Type      |   SRH Len     |    LastEntry  |  Segment Left |
++	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+*/
++	result[0] = uint8(aftype)
++	result[1] = uint8(len(result))
++	result[2] = uint8(segListLen + 1)
++	result[3] = uint8(segListLen + 1)
++
++	return result
++}
++
++//StrToByte is used to build segment byte array
++//  Args:
++//     str : 192.168.1.2:1234  or [2001:1234::1]:1234
++//
++//  Return:
++//     []byte{ Address, Port} with network order
++//      if str is invalid this function will return nil
++func StrToByte(str string) []byte {
++	uaddr, err := net.ResolveUDPAddr("udp", str)
++	if err != nil {
++		return nil
++	}
++	port := uint16(uaddr.Port)
++	ipv4 := uaddr.IP.To4()
++
++	//IPv6 address return [16]Byte Addr + [2]byte Port
++	if ipv4 == nil {
++		buf := bytes.NewBuffer([]byte(uaddr.IP))
++		buf.WriteByte(byte(port >> 8))
++		buf.WriteByte(byte(port & 0xff))
++		return buf.Bytes()
++	}
++
++	//IPv4 address return [4]Byte Addr + [2]byte Port
++	buf := bytes.NewBuffer([]byte(ipv4))
++	buf.WriteByte(byte(port >> 8))
++	buf.WriteByte(byte(port & 0xff))
++	return buf.Bytes()
++}
++
++//ByteToNetAddr is used to parse segment to net.Addr format
++func ByteToNetAddr(b []byte) net.Addr {
++	blen := len(b)
++	if blen == 6 {
++		ip := net.IP(b[0:4])
++		port := binary.BigEndian.Uint16(b[4:6])
++
++		return &net.UDPAddr{
++			IP:   ip,
++			Port: int(port),
++		}
++
++	} else if blen == 18 {
++		ip := net.IP(b[0:16])
++		port := binary.BigEndian.Uint16(b[16:18])
++
++		return &net.UDPAddr{
++			IP:   ip,
++			Port: int(port),
++		}
++	}
++	return nil
++}
+diff --git a/interface.go b/interface.go
+index eeadf220..7ba7e03c 100644
+--- a/interface.go
++++ b/interface.go
+@@ -187,6 +187,8 @@ type Session interface {
+ 	// It blocks until the handshake completes.
+ 	// Warning: This API should not be considered stable and might change soon.
+ 	ConnectionState() ConnectionState
++
++	SetQUICSR([]string, []byte)
+ }
+ 
+ // An EarlySession is a session that is handshaking.
+diff --git a/packet_handler_map.go b/packet_handler_map.go
+index 1daec42b..61d4f809 100644
+--- a/packet_handler_map.go
++++ b/packet_handler_map.go
+@@ -236,7 +236,24 @@ func (h *packetHandlerMap) listen() {
+ 			h.close(err)
+ 			return
+ 		}
+-		h.handlePacket(addr, buffer, data[:n])
++		//Hack for quic-SR
++		if data[0] == 0 {
++			//quic-SR packet
++			qsrLen := data[1]
++			srcAddrLoc := uint8(data[2]) + 4
++
++			af := uint8(data[3])
++			var segLen uint8 = 6
++			if af == 2 {
++				segLen = 18
++			}
++			src := data[srcAddrLoc : srcAddrLoc+segLen]
++			srcAddr := ByteToNetAddr(src)
++			h.handlePacket(srcAddr, buffer, data[qsrLen:n])
++		} else {
++			h.handlePacket(addr, buffer, data[:n])
++		}
++
+ 	}
+ }
+ 
+diff --git a/server.go b/server.go
+index b20f0b13..1f12a734 100644
+--- a/server.go
++++ b/server.go
+@@ -50,6 +50,7 @@ type quicSession interface {
+ 	destroy(error)
+ 	shutdown()
+ 	closeForRecreating() protocol.PacketNumber
++	SetQUICSR([]string, []byte)
+ }
+ 
+ // A Listener of QUIC
+diff --git a/session.go b/session.go
+index 040bc12a..325724a8 100644
+--- a/session.go
++++ b/session.go
+@@ -1652,3 +1652,7 @@ func (s *session) getPerspective() protocol.Perspective {
+ func (s *session) GetVersion() protocol.VersionNumber {
+ 	return s.version
+ }
++
++func (s *session) SetQUICSR(seglist []string, flowid []byte) {
++	s.conn.SetQUICSR(seglist, flowid)
++}
