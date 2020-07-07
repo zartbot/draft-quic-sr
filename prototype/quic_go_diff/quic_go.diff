@@ -1,5 +1,5 @@
 diff --git a/conn.go b/conn.go
-index 700c1471..197b2086 100644
+index 700c1471..823b6dd7 100644
 --- a/conn.go
 +++ b/conn.go
 @@ -1,6 +1,8 @@
@@ -49,7 +49,7 @@ index 700c1471..197b2086 100644
  }
  
  func (c *conn) SetCurrentRemoteAddr(addr net.Addr) {
-@@ -52,3 +66,207 @@ func (c *conn) RemoteAddr() net.Addr {
+@@ -52,3 +66,206 @@ func (c *conn) RemoteAddr() net.Addr {
  func (c *conn) Close() error {
  	return c.pconn.Close()
  }
@@ -90,11 +90,10 @@ index 700c1471..197b2086 100644
 +   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 +
 +   AFType = 0:IPv4  1:IPv6
-+   SRType: 0:  Linkstate probe
-+   SRType: 1:  32+16 bit IPv4 socket
++   SRType: 0: Linkstate probe, used for link state test packet.
++   SRType: 1: 32+16 bit IPv4 socket
 +   SRType: 2: 128+16 bit IPv6 socket
-+   SRType: 3:  32 bit Label, require etcd mapping forward udp socket
-+   SRType: 4: 128 bit Label, interworking with SRv6
++   SRType: 3: 128 bit Label, interworking with SRv6
 +
 +*/
 +
@@ -198,8 +197,8 @@ index 700c1471..197b2086 100644
 +	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+*/
 +	result[0] = uint8(aftype)
 +	result[1] = uint8(len(result))
-+	result[2] = uint8(segListLen + 1)
-+	result[3] = uint8(segListLen + 1)
++	result[2] = uint8(segListLen)
++	result[3] = uint8(segListLen)
 +
 +	return result
 +}
@@ -271,10 +270,10 @@ index eeadf220..7ba7e03c 100644
  
  // An EarlySession is a session that is handshaking.
 diff --git a/packet_handler_map.go b/packet_handler_map.go
-index 1daec42b..61d4f809 100644
+index 1daec42b..fea8ddd6 100644
 --- a/packet_handler_map.go
 +++ b/packet_handler_map.go
-@@ -236,7 +236,24 @@ func (h *packetHandlerMap) listen() {
+@@ -236,7 +236,22 @@ func (h *packetHandlerMap) listen() {
  			h.close(err)
  			return
  		}
@@ -284,7 +283,6 @@ index 1daec42b..61d4f809 100644
 +			//quic-SR packet
 +			qsrLen := data[1]
 +			srcAddrLoc := uint8(data[2]) + 4
-+
 +			af := uint8(data[3])
 +			var segLen uint8 = 6
 +			if af == 2 {
@@ -296,7 +294,6 @@ index 1daec42b..61d4f809 100644
 +		} else {
 +			h.handlePacket(addr, buffer, data[:n])
 +		}
-+
  	}
  }
  
