@@ -1,5 +1,5 @@
 diff --git a/conn.go b/conn.go
-index 700c1471..d217ceb0 100644
+index 700c1471..afc2089b 100644
 --- a/conn.go
 +++ b/conn.go
 @@ -1,6 +1,8 @@
@@ -15,11 +15,11 @@ index 700c1471..d217ceb0 100644
  	LocalAddr() net.Addr
  	RemoteAddr() net.Addr
  	SetCurrentRemoteAddr(net.Addr)
-+	SetQUICSR([]string, []byte)
++	SetQUICSR([]string, []byte, bool)
  }
  
  type conn struct {
-@@ -19,17 +22,28 @@ type conn struct {
+@@ -19,17 +22,35 @@ type conn struct {
  
  	pconn       net.PacketConn
  	currentAddr net.Addr
@@ -27,6 +27,7 @@ index 700c1471..d217ceb0 100644
 +	QUICSRH     []byte
 +	segmentList []string
 +	flowid      []byte
++	dupSend     bool
  }
  
  var _ connection = &conn{}
@@ -35,11 +36,17 @@ index 700c1471..d217ceb0 100644
 -	_, err := c.pconn.WriteTo(p, c.currentAddr)
 +	if c.QUICSRH == nil {
 +		_, err := c.pconn.WriteTo(p, c.currentAddr)
++		if c.dupSend {
++			_, err = c.pconn.WriteTo(p, c.currentAddr)
++		}
 +		return err
 +	}
 +	buf := bytes.NewBuffer(c.QUICSRH)
 +	buf.Write(p)
 +	_, err := c.pconn.WriteTo(buf.Bytes(), c.nhopAddr)
++	if c.dupSend {
++		_, err = c.pconn.WriteTo(buf.Bytes(), c.nhopAddr)
++	}
  	return err
  }
  
@@ -49,7 +56,7 @@ index 700c1471..d217ceb0 100644
  }
  
  func (c *conn) SetCurrentRemoteAddr(addr net.Addr) {
-@@ -52,3 +66,205 @@ func (c *conn) RemoteAddr() net.Addr {
+@@ -52,3 +73,207 @@ func (c *conn) RemoteAddr() net.Addr {
  func (c *conn) Close() error {
  	return c.pconn.Close()
  }
@@ -101,7 +108,9 @@ index 700c1471..d217ceb0 100644
 +
 +*/
 +
-+func (c *conn) SetQUICSR(seglist []string, flowid []byte) {
++func (c *conn) SetQUICSR(seglist []string, flowid []byte, dupSend bool) {
++	c.dupSend = dupSend
++
 +	if len(seglist) == 0 {
 +		return
 +	}
@@ -256,7 +265,7 @@ index 700c1471..d217ceb0 100644
 +	return nil
 +}
 diff --git a/interface.go b/interface.go
-index eeadf220..7ba7e03c 100644
+index eeadf220..c7ccc96a 100644
 --- a/interface.go
 +++ b/interface.go
 @@ -187,6 +187,8 @@ type Session interface {
@@ -264,12 +273,12 @@ index eeadf220..7ba7e03c 100644
  	// Warning: This API should not be considered stable and might change soon.
  	ConnectionState() ConnectionState
 +
-+	SetQUICSR([]string, []byte)
++	SetQUICSR([]string, []byte, bool)
  }
  
  // An EarlySession is a session that is handshaking.
 diff --git a/internal/mocks/quic/early_session.go b/internal/mocks/quic/early_session.go
-index e5fcf0ae..dd14cc06 100644
+index e5fcf0ae..d49c6040 100644
 --- a/internal/mocks/quic/early_session.go
 +++ b/internal/mocks/quic/early_session.go
 @@ -211,3 +211,15 @@ func (mr *MockEarlySessionMockRecorder) RemoteAddr() *gomock.Call {
@@ -278,18 +287,18 @@ index e5fcf0ae..dd14cc06 100644
  }
 +
 +// SetQUICSR mocks base method
-+func (m *MockEarlySession) SetQUICSR(arg0 []string, arg1 []byte) {
++func (m *MockEarlySession) SetQUICSR(arg0 []string, arg1 []byte, arg2 bool) {
 +	m.ctrl.T.Helper()
-+	m.ctrl.Call(m, "SetQUICSR", arg0, arg1)
++	m.ctrl.Call(m, "SetQUICSR", arg0, arg1, arg2)
 +}
 +
 +// SetQUICSR indicates an expected call of SetQUICSR
-+func (mr *MockEarlySessionMockRecorder) SetQUICSR(arg0, arg1 interface{}) *gomock.Call {
++func (mr *MockEarlySessionMockRecorder) SetQUICSR(arg0, arg1, arg2 interface{}) *gomock.Call {
 +	mr.mock.ctrl.T.Helper()
-+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetQUICSR", reflect.TypeOf((*MockEarlySession)(nil).SetQUICSR), arg0, arg1)
++	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetQUICSR", reflect.TypeOf((*MockEarlySession)(nil).SetQUICSR), arg0, arg1, arg2)
 +}
 diff --git a/mock_connection_test.go b/mock_connection_test.go
-index 4eb2b3ea..a0170bf1 100644
+index 4eb2b3ea..81607c21 100644
 --- a/mock_connection_test.go
 +++ b/mock_connection_test.go
 @@ -117,3 +117,15 @@ func (mr *MockConnectionMockRecorder) Write(arg0 interface{}) *gomock.Call {
@@ -298,18 +307,18 @@ index 4eb2b3ea..a0170bf1 100644
  }
 +
 +// SetQUICSR mocks base method
-+func (m *MockConnection) SetQUICSR(arg0 []string, arg1 []byte) {
++func (m *MockConnection) SetQUICSR(arg0 []string, arg1 []byte, arg2 bool) {
 +	m.ctrl.T.Helper()
-+	m.ctrl.Call(m, "SetQUICSR", arg0, arg1)
++	m.ctrl.Call(m, "SetQUICSR", arg0, arg1, arg2)
 +}
 +
 +// SetQUICSR indicates an expected call of SetQUICSR
-+func (mr *MockConnectionMockRecorder) SetQUICSR(arg0, arg1 interface{}) *gomock.Call {
++func (mr *MockConnectionMockRecorder) SetQUICSR(arg0, arg1, arg2 interface{}) *gomock.Call {
 +	mr.mock.ctrl.T.Helper()
-+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetQUICSR", reflect.TypeOf((*MockConnection)(nil).SetQUICSR), arg0, arg1)
++	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetQUICSR", reflect.TypeOf((*MockConnection)(nil).SetQUICSR), arg0, arg1, arg2)
 +}
 diff --git a/mock_quic_session_test.go b/mock_quic_session_test.go
-index 23e4f9c4..c8bcd0d6 100644
+index 23e4f9c4..e04f3b17 100644
 --- a/mock_quic_session_test.go
 +++ b/mock_quic_session_test.go
 @@ -316,3 +316,15 @@ func (mr *MockQuicSessionMockRecorder) shutdown() *gomock.Call {
@@ -318,15 +327,15 @@ index 23e4f9c4..c8bcd0d6 100644
  }
 +
 +// SetQUICSR mocks base method
-+func (m *MockQuicSession) SetQUICSR(arg0 []string, arg1 []byte) {
++func (m *MockQuicSession) SetQUICSR(arg0 []string, arg1 []byte, arg2 bool) {
 +	m.ctrl.T.Helper()
-+	m.ctrl.Call(m, "SetQUICSR", arg0, arg1)
++	m.ctrl.Call(m, "SetQUICSR", arg0, arg1, arg2)
 +}
 +
 +// SetQUICSR indicates an expected call of SetQUICSR
-+func (mr *MockQuicSessionMockRecorder) SetQUICSR(arg0, arg1 interface{}) *gomock.Call {
++func (mr *MockQuicSessionMockRecorder) SetQUICSR(arg0, arg1, arg2 interface{}) *gomock.Call {
 +	mr.mock.ctrl.T.Helper()
-+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetQUICSR", reflect.TypeOf((*MockQuicSession)(nil).SetQUICSR), arg0, arg1)
++	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetQUICSR", reflect.TypeOf((*MockQuicSession)(nil).SetQUICSR), arg0, arg1, arg2)
 +}
 diff --git a/packet_handler_map.go b/packet_handler_map.go
 index 1daec42b..fea8ddd6 100644
@@ -357,19 +366,19 @@ index 1daec42b..fea8ddd6 100644
  }
  
 diff --git a/server.go b/server.go
-index b20f0b13..1f12a734 100644
+index b20f0b13..7f2a4d22 100644
 --- a/server.go
 +++ b/server.go
 @@ -50,6 +50,7 @@ type quicSession interface {
  	destroy(error)
  	shutdown()
  	closeForRecreating() protocol.PacketNumber
-+	SetQUICSR([]string, []byte)
++	SetQUICSR([]string, []byte,bool)
  }
  
  // A Listener of QUIC
 diff --git a/session.go b/session.go
-index 040bc12a..325724a8 100644
+index 040bc12a..009339cf 100644
 --- a/session.go
 +++ b/session.go
 @@ -1652,3 +1652,7 @@ func (s *session) getPerspective() protocol.Perspective {
@@ -377,6 +386,6 @@ index 040bc12a..325724a8 100644
  	return s.version
  }
 +
-+func (s *session) SetQUICSR(seglist []string, flowid []byte) {
-+	s.conn.SetQUICSR(seglist, flowid)
++func (s *session) SetQUICSR(seglist []string, flowid []byte, dupSend bool) {
++	s.conn.SetQUICSR(seglist, flowid, dupSend)
 +}
