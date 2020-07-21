@@ -96,7 +96,7 @@ index 700c1471..afc2089b 100644
 +   |                        Options                                |
 +   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 +
-+   Protocol-ID = 0:IPv4  1:IPv6
++   Protocol-ID = 0:OAM 1:IPv4  2:IPv6 3:STUN-OAM-IPv4 4:STUN-OAM-IPv6
 +   SRType: 0: Linkstate probe, used for link state test packet.
 +   SRType: 1: 32+16 bit IPv4 socket
 +   SRType: 2: 128+16 bit IPv6 socket

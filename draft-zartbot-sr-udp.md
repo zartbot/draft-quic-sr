@@ -141,7 +141,10 @@ SR over UDP must be present at the head of UDP payload.
 {: #srh-format title="SRoU Header"}
  
 Magic Number:
-      1 Byte field with ALL ZERO.
+      1 Byte field
+      For QUIC: could set to ALL ZERO to diffenciate with original header.
+      For IPSec: could set to Non-ZERO value and avoid SPI allocation in
+                 this range.
 
 SRoU Length:
       1 Byte, The byte length of a SRoU header.
@@ -156,6 +159,8 @@ Protocol-ID:
 |  0x0 | OAM         | for Link state probe and other OAM  |
 |  0x1 | IPv4        | Indicate inner payload is IPv4 pkt  |
 |  0x2 | IPv6        | Indicate inner payload is IPv6 pkt  |
+|  0x3 | STUN-IPv4   | Used for discover Public address    |
+|  0x4 | STUN-IPv6   | Used for discover Public address    |
 {: #protocol-id title="Protocol ID field"}
 
 Source Address:
@@ -559,4 +564,5 @@ The following people provided substantial contributions to this document:
 - Yijen Wang, Cisco Systems, Inc.
 - Pix Xu, Cisco Systems, Inc.
 - Xing James Jiang, Cisco Systems, Inc.
+
 
