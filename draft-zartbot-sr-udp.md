@@ -27,6 +27,11 @@ author:
     name: Feng Cai
     org:  Cisco Systems, Inc.
     email: fecai@cisco.com
+  -
+    ins: X. Jiang
+    name: Xing Jiang
+    org:  Cisco Systems, Inc.
+    email: jamjiang@cisco.com
 
 --- abstract
 
@@ -38,10 +43,11 @@ in UDP transport protocol with Network Address Translation Traversal.
 # Introduction
 
 Many UDP based transport protocol(eg, IPSec/DTLS/QUIC) could provide a secure
-transportation layer to handle overlay traffic.
+transportation layer to handle overlay traffic. How ever it does not flexible
+for source based path enforcement.
 
 This document defines a new Segment Routing Header in UDP payload to enable 
-segment routing over UDP(SRoU). 
+segment routing over UDP(SRoU) for IPSec/DTLS/QUIC or other UDP based traffic.
 
 Segment Routing over UDP(SRoU) interworking with QUIC could provide a generic 
 programmable and secure transport layer for next generation applications.
@@ -143,8 +149,10 @@ SR over UDP must be present at the head of UDP payload.
 Magic Number:
       1 Byte field
       For QUIC: could set to ALL ZERO to diffenciate with original header.
-      For IPSec: could set to Non-ZERO value and avoid SPI allocation in
+      For IPSec: could set to 0xFE value and avoid SPI allocation in
                  this range.
+                 *0x00 may conflict with NON-ESP HEADER 
+                 *0xFF may conflict with KeepAlive Message
 
 SRoU Length:
       1 Byte, The byte length of a SRoU header.
@@ -159,8 +167,6 @@ Protocol-ID:
 |  0x0 | OAM         | for Link state probe and other OAM  |
 |  0x1 | IPv4        | Indicate inner payload is IPv4 pkt  |
 |  0x2 | IPv6        | Indicate inner payload is IPv6 pkt  |
-|  0x3 | STUN-IPv4   | Used for discover Public address    |
-|  0x4 | STUN-IPv6   | Used for discover Public address    |
 {: #protocol-id title="Protocol ID field"}
 
 Source Address:
@@ -426,6 +432,86 @@ field, it could be store in option TLV.
 
 
 
+# OAM 
+
+SRoU OAM Packet format is defined as below:
+
+~~~
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Magic Number  |  SRoU Length  | Flow ID Length|  P-ID  =0x0   |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               |
+ |                 Flow ID( Variable length)                     |
+ |                                                               |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | OAM-Type      |   OAM Payload(Variable Length based on Type)  |
+ +-+-+-+-+-+-+-+-+                                               +
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~
+{: #oam-format title="SRoU OAM Header"}
+
+OAM-Type:
+
+|ID    | Type                   | Usage                                       |
+|-----:|:----------------------:|:--------------------------------------------|
+|  0   | LinkState              | KeepAlive / Latency Measurement             |
+|  1   | IPv4 STUN Request      |                                             |
+|  2   | IPv4 STUN Response     |                                             |
+|  3   | IPv6 STUN Request      | *Reserved for NAT66 Case(Not implement yet) |
+|  4   | IPv6 STUN Response     | *Reserved for NAT66 Case(Not implement yet) |
+{: #oam_type title="oam message type"}
+
+## Link State
+
+
+Each enpoint could initial this OAM message to its peer with local generated
+sequence number and timestamp. This payload recommend to use private key 
+encrypted. 
+
+The reciever just echo this packet back to source for RTT measurement.
+Two-way latency measurement will be defined in future release.
+
+~~~
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                         Sequence Number                       |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                          TimeStamp                            |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~
+{: #oam-ls-format title="SRoU OAM Link State Header"}
+
+
+## STUN Service
+
+SRoU forwarding endpoint may stay behind NAT, it request STUN service to 
+discover the public network address.
+
+Initiator send address and port with ALL-ZERO to STUN Server, STUN server
+copy the recieve source address and port in this payload, and generate HMAC.
+The STUN Server's key could be propogate to initiator by a out-of-band channel.
+
+~~~
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       IP Address                              |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |    Port                       |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                          HMAC                                 |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~
+{: #oam-stun-format title="SRoU OAM STUN Header"}
+
+
 # Usage
 
 ## Traffic engineering over Internet
@@ -563,6 +649,6 @@ The following people provided substantial contributions to this document:
 - Bin Shi, Cisco Systems, Inc.
 - Yijen Wang, Cisco Systems, Inc.
 - Pix Xu, Cisco Systems, Inc.
-- Xing James Jiang, Cisco Systems, Inc.
+
 
 
