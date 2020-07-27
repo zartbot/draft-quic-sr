@@ -467,17 +467,15 @@ OAM-Type:
 
 ## Link State
 
-
 Each enpoint could initial this OAM message to its peer with local generated
 sequence number and timestamp. This payload recommend to use private key 
 encrypted. 
 
-The reciever just echo this packet back to source for RTT measurement.
-Two-way latency measurement will be defined in future release.
-
 ~~~
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+
+ | LinkStateType |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |                         Sequence Number                       |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -486,6 +484,19 @@ Two-way latency measurement will be defined in future release.
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 {: #oam-ls-format title="SRoU OAM Link State Header"}
+
+
+The initiator send packet with LinkStateType = 0, The responder will modify this
+flag to 1 and echo the entire packet back. Other type may defined for Two-way 
+latency measurement which will be defined in later rfc version.
+
+LinkStateType:
+
+|ID    | Type                   | Usage                                       |
+|-----:|:----------------------:|:--------------------------------------------|
+|  0   | RTT_Request            |                                             |
+|  1   | RTT_Response           |                                             |
+{: #oam_linkstate_type title="oam linkstate message type"}
 
 
 ## STUN Service
