@@ -75,7 +75,7 @@ Table of Contents
        3.4.2.  Micro-segmentation(uSeg)  . . . . . . . . . . . . . .  10
        3.4.3.  End.PacketInfo  . . . . . . . . . . . . . . . . . . .  11
    4.  OAM . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
-     4.1.  Link State  . . . . . . . . . . . . . . . . . . . . . . .  12
+     4.1.  Performance Measurement . . . . . . . . . . . . . . . . .  12
      4.2.  STUN Service  . . . . . . . . . . . . . . . . . . . . . .  14
    5.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . . . .  15
      5.1.  Traffic engineering over Internet . . . . . . . . . . . .  15
@@ -637,32 +637,32 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
    OAM-Type:
 
-       +----+--------------------+---------------------------------+
-       | ID |        Type        | Usage                           |
-       +====+====================+=================================+
-       |  0 |     LinkState      | KeepAlive / Latency Measurement |
-       +----+--------------------+---------------------------------+
-       |  1 | IPv4 STUN Request  |                                 |
-       +----+--------------------+---------------------------------+
-       |  2 | IPv4 STUN Response |                                 |
-       +----+--------------------+---------------------------------+
-       |  3 | IPv6 STUN Request  | *Reserved for NAT66 Case(Not    |
-       |    |                    | implement yet)                  |
-       +----+--------------------+---------------------------------+
-       |  4 | IPv6 STUN Response | *Reserved for NAT66 Case(Not    |
-       |    |                    | implement yet)                  |
-       +----+--------------------+---------------------------------+
+     +----+--------------------+-------------------------------------+
+     | ID |        Type        | Usage                               |
+     +====+====================+=====================================+
+     |  0 |         PM         | Latency & Loss & Jitter Measurement |
+     +----+--------------------+-------------------------------------+
+     |  1 | IPv4 STUN Request  |                                     |
+     +----+--------------------+-------------------------------------+
+     |  2 | IPv4 STUN Response |                                     |
+     +----+--------------------+-------------------------------------+
+     |  3 | IPv6 STUN Request  | *Reserved for NAT66 Case(Not        |
+     |    |                    | implement yet)                      |
+     +----+--------------------+-------------------------------------+
+     |  4 | IPv6 STUN Response | *Reserved for NAT66 Case(Not        |
+     |    |                    | implement yet)                      |
+     +----+--------------------+-------------------------------------+
 
                          Table 6: oam message type
 
-4.1.  Link State
+4.1.  Performance Measurement
 
-   The link state message is follow TWAMP algorithm.This OAM message
-   could be used for both Authentication mode( with HMAC-SHA256) or
-   Crypt mode(AES-GCM-256).  Crypto key could be synchonized via out-of-
-   band channel.
+   The performance measurement message is follow TWAMP algorithm.This
+   OAM message could be used for Authentication mode( with HMAC-SHA256)
+   or Crypt mode(AES-GCM-256).  Crypto key could be synchonized via out-
+   of-band channel.
 
-   LinkStateType:
+   PMType:
 
 
 
@@ -674,18 +674,19 @@ Fang, et al.             Expires 30 January 2021               [Page 12]
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
-                    +----+--------------------+-------+
-                    | ID |        Type        | Usage |
-                    +====+====================+=======+
-                    |  0 | LinkState_Request  |       |
-                    +----+--------------------+-------+
-                    |  1 | LinkState_Response |       |
-                    +----+--------------------+-------+
+                       +----+-------------+-------+
+                       | ID |     Type    | Usage |
+                       +====+=============+=======+
+                       |  0 |  PM_Request |       |
+                       +----+-------------+-------+
+                       |  1 | PM_Response |       |
+                       +----+-------------+-------+
 
-                    Table 7: oam linkstate message type
+                            Table 7: oam perf
+                         measurement message type
 
-   The initiator send packet with LinkStateType = 0, and it contains
-   sending timestamp.
+   The initiator send packet with PMType = 0, and it contains sending
+   timestamp.
 
    Sequence Number: start from zero, add one after send request packet.
    TimeStamp: sending timestamp.  HMAC(Optional): HMAC-SHA256 used for
@@ -694,7 +695,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    | OAM Type=0    |LSType=0      |    MBZ                         |
+    | OAM Type=0    |PMType=0      |    MBZ                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                         Sequence Number                       |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -705,9 +706,9 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
     |                                                               |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-               Figure 9: SRoU OAM Link State Request Message
+            Figure 9: SRoU OAM Perf Measurement Request Message
 
-   The responder message is with LinkStateType = 1, and it contains:
+   The responder message is with PMType = 1, and it contains:
 
    Sequence Number: start from zero, add one after send response packet.
    TimeStamp: sending timestamp.  Recieved Timestamp: the correspond
@@ -715,7 +716,6 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
    copied from the correspond request message Sender Timestamp:exactly
    copied from the correspond request message HMAC(Optional): HMAC-
    SHA256 used for message authentication.
-
 
 
 
@@ -733,7 +733,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    | OAM Type=0    |LSType=1      |    MBZ                         |
+    | OAM Type=0    |PMType=1      |    MBZ                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                       Sequence Number                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -752,7 +752,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
     |                                                               |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-              Figure 10: SRoU OAM Link State Response Message
+           Figure 10: SRoU OAM Perf Measurement Response Message
 
 4.2.  STUN Service
 

@@ -456,29 +456,30 @@ OAM-Type:
 
 |ID    | Type                   | Usage                                       |
 |-----:|:----------------------:|:--------------------------------------------|
-|  0   | LinkState              | KeepAlive / Latency Measurement             |
+|  0   | PM                     | Latency & Loss & Jitter Measurement         |
 |  1   | IPv4 STUN Request      |                                             |
 |  2   | IPv4 STUN Response     |                                             |
 |  3   | IPv6 STUN Request      | *Reserved for NAT66 Case(Not implement yet) |
 |  4   | IPv6 STUN Response     | *Reserved for NAT66 Case(Not implement yet) |
 {: #oam_type title="oam message type"}
 
-## Link State
+## Performance Measurement
 
-The link state message is follow TWAMP algorithm.This OAM message could be used
-for both Authentication mode( with HMAC-SHA256) or Crypt mode(AES-GCM-256).
+The performance measurement message is follow TWAMP algorithm.This OAM message 
+could be used for Authentication mode( with HMAC-SHA256) or 
+Crypt mode(AES-GCM-256).
 Crypto key could be synchonized via out-of-band channel.
 
-LinkStateType:
+PMType:
 
-|ID    | Type                   | Usage                                       |
-|-----:|:----------------------:|:--------------------------------------------|
-|  0   | LinkState_Request      |                                             |
-|  1   | LinkState_Response     |                                             |
-{: #oam_linkstate_type title="oam linkstate message type"}
+|ID    | Type            | Usage                                       |
+|-----:|:---------------:|:--------------------------------------------|
+|  0   | PM_Request      |                                             |
+|  1   | PM_Response     |                                             |
+{: #oam_pm_type title="oam perf measurement message type"}
 
 
-The initiator send packet with LinkStateType = 0, and it contains sending 
+The initiator send packet with PMType = 0, and it contains sending 
 timestamp.
 
 Sequence Number: start from zero, add one after send request packet.
@@ -489,7 +490,7 @@ HMAC(Optional): HMAC-SHA256 used for message authentication.
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- | OAM Type=0    |LSType=0      |    MBZ                         |
+ | OAM Type=0    |PMType=0      |    MBZ                         |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |                         Sequence Number                       |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -501,10 +502,10 @@ HMAC(Optional): HMAC-SHA256 used for message authentication.
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ~~~
-{: #oam-ls-req-format title="SRoU OAM Link State Request Message"}
+{: #oam-ls-req-format title="SRoU OAM Perf Measurement Request Message"}
 
 
-The responder message is with LinkStateType = 1, and it contains:
+The responder message is with PMType = 1, and it contains:
 
 Sequence Number: start from zero, add one after send response packet.
 TimeStamp: sending timestamp.
@@ -517,7 +518,7 @@ HMAC(Optional): HMAC-SHA256 used for message authentication.
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- | OAM Type=0    |LSType=1      |    MBZ                         |
+ | OAM Type=0    |PMType=1      |    MBZ                         |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |                       Sequence Number                         |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -536,7 +537,7 @@ HMAC(Optional): HMAC-SHA256 used for message authentication.
  |                                                               |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
-{: #oam-ls-resp-format title="SRoU OAM Link State Response Message"}
+{: #oam-pm-resp-format title="SRoU OAM Perf Measurement Response Message"}
 
 ## STUN Service
 
