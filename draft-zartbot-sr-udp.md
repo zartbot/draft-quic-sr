@@ -430,8 +430,6 @@ In SR Type 0x3, The original destination address/port cloud not encode in 128bit
 field, it could be store in option TLV.
 
 
-
-
 # OAM 
 
 SRoU OAM Packet format is defined as below:
@@ -467,37 +465,78 @@ OAM-Type:
 
 ## Link State
 
-Each enpoint could initial this OAM message to its peer with local generated
-sequence number and timestamp. This payload recommend to use private key 
-encrypted. 
+The link state message is follow TWAMP algorithm.This OAM message could be used
+for both Authentication mode( with HMAC-SHA256) or Crypt mode(AES-GCM-256).
+Crypto key could be synchonized via out-of-band channel.
+
+LinkStateType:
+
+|ID    | Type                   | Usage                                       |
+|-----:|:----------------------:|:--------------------------------------------|
+|  0   | LinkState_Request      |                                             |
+|  1   | LinkState_Response     |                                             |
+{: #oam_linkstate_type title="oam linkstate message type"}
+
+
+The initiator send packet with LinkStateType = 0, and it contains sending 
+timestamp.
+
+Sequence Number: start from zero, add one after send request packet.
+TimeStamp: sending timestamp.
+HMAC(Optional): HMAC-SHA256 used for message authentication.
 
 ~~~
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +-+-+-+-+-+-+-+-+
- | LinkStateType |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | LSType=0      |             MBZ                               |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |                         Sequence Number                       |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |                          TimeStamp                            |
  |                                                               |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                        HMAC(Optional)                         |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 ~~~
-{: #oam-ls-format title="SRoU OAM Link State Header"}
+{: #oam-ls-req-format title="SRoU OAM Link State Request Message"}
 
 
-The initiator send packet with LinkStateType = 0, The responder will modify this
-flag to 1 and echo the entire packet back. Other type may defined for Two-way 
-latency measurement which will be defined in later rfc version.
+The responder message is with LinkStateType = 1, and it contains:
 
-LinkStateType:
+Sequence Number: start from zero, add one after send response packet.
+TimeStamp: sending timestamp.
+Recieved Timestamp: the correspond request message recieved timestamp.
+Sender Sequence Number: exactly copied from the correspond request message
+Sender Timestamp:exactly copied from the correspond request message
+HMAC(Optional): HMAC-SHA256 used for message authentication.
 
-|ID    | Type                   | Usage                                       |
-|-----:|:----------------------:|:--------------------------------------------|
-|  0   | RTT_Request            |                                             |
-|  1   | RTT_Response           |                                             |
-{: #oam_linkstate_type title="oam linkstate message type"}
-
+~~~
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | LSType=1      |             MBZ                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       Sequence Number                         |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                         TimeStamp                             |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                     Recieved TimeStamp                        |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                    Sender Sequence Number                     |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       Sender TimeStamp                        |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                        HMAC(Optional)                         |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~
+{: #oam-ls-resp-format title="SRoU OAM Link State Response Message"}
 
 ## STUN Service
 

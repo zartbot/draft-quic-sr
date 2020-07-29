@@ -5,11 +5,11 @@
 SPRING                                                           K. Fang
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Experimental                                      Y. Li
-Expires: 28 January 2021                                    Google, Inc.
+Expires: 30 January 2021                                    Google, Inc.
                                                                   F. Cai
                                                                 X. Jiang
                                                      Cisco Systems, Inc.
-                                                            27 July 2020
+                                                            29 July 2020
 
 
                      Segment Routing over UDP(SRoU)
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 January 2021.
+   This Internet-Draft will expire on 30 January 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 1]
+Fang, et al.             Expires 30 January 2021                [Page 1]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -76,22 +76,22 @@ Table of Contents
        3.4.3.  End.PacketInfo  . . . . . . . . . . . . . . . . . . .  11
    4.  OAM . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  11
      4.1.  Link State  . . . . . . . . . . . . . . . . . . . . . . .  12
-     4.2.  STUN Service  . . . . . . . . . . . . . . . . . . . . . .  13
-   5.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     5.1.  Traffic engineering over Internet . . . . . . . . . . . .  14
-     5.2.  Multipath forwarding  . . . . . . . . . . . . . . . . . .  14
-     5.3.  Micro Segmentation  . . . . . . . . . . . . . . . . . . .  14
-     5.4.  Container Network . . . . . . . . . . . . . . . . . . . .  14
-     5.5.  MPLS-SR with SDWAN  . . . . . . . . . . . . . . . . . . .  15
+     4.2.  STUN Service  . . . . . . . . . . . . . . . . . . . . . .  14
+   5.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     5.1.  Traffic engineering over Internet . . . . . . . . . . . .  15
+     5.2.  Multipath forwarding  . . . . . . . . . . . . . . . . . .  15
+     5.3.  Micro Segmentation  . . . . . . . . . . . . . . . . . . .  15
+     5.4.  Container Network . . . . . . . . . . . . . . . . . . . .  15
+     5.5.  MPLS-SR with SDWAN  . . . . . . . . . . . . . . . . . . .  16
      5.6.  Cloud Native Network platform . . . . . . . . . . . . . .  16
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
      7.1.  SRoU with QUIC  . . . . . . . . . . . . . . . . . . . . .  17
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  17
-   References  . . . . . . . . . . . . . . . . . . . . . . . . . . .  17
-     Normative References  . . . . . . . . . . . . . . . . . . . . .  17
+   References  . . . . . . . . . . . . . . . . . . . . . . . . . . .  18
+     Normative References  . . . . . . . . . . . . . . . . . . . . .  18
      Informative References  . . . . . . . . . . . . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 2]
+Fang, et al.             Expires 30 January 2021                [Page 2]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -165,7 +165,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 3]
+Fang, et al.             Expires 30 January 2021                [Page 3]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -221,7 +221,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 4]
+Fang, et al.             Expires 30 January 2021                [Page 4]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -277,7 +277,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 5]
+Fang, et al.             Expires 30 January 2021                [Page 5]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -333,7 +333,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 6]
+Fang, et al.             Expires 30 January 2021                [Page 6]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -389,7 +389,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 7]
+Fang, et al.             Expires 30 January 2021                [Page 7]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -445,7 +445,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 8]
+Fang, et al.             Expires 30 January 2021                [Page 8]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -501,7 +501,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021                [Page 9]
+Fang, et al.             Expires 30 January 2021                [Page 9]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -557,7 +557,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021               [Page 10]
+Fang, et al.             Expires 30 January 2021               [Page 10]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -613,7 +613,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
 
-Fang, et al.             Expires 28 January 2021               [Page 11]
+Fang, et al.             Expires 30 January 2021               [Page 11]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
@@ -657,53 +657,102 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 4.1.  Link State
 
-   Each enpoint could initial this OAM message to its peer with local
-   generated sequence number and timestamp.  This payload recommend to
-   use private key encrypted.
+   The link state message is follow TWAMP algorithm.This OAM message
+   could be used for both Authentication mode( with HMAC-SHA256) or
+   Crypt mode(AES-GCM-256).  Crypto key could be synchonized via out-of-
+   band channel.
+
+   LinkStateType:
 
 
 
 
 
 
-
-
-
-Fang, et al.             Expires 28 January 2021               [Page 12]
+Fang, et al.             Expires 30 January 2021               [Page 12]
 
 Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 
+                    +----+--------------------+-------+
+                    | ID |        Type        | Usage |
+                    +====+====================+=======+
+                    |  0 | LinkState_Request  |       |
+                    +----+--------------------+-------+
+                    |  1 | LinkState_Response |       |
+                    +----+--------------------+-------+
+
+                    Table 7: oam linkstate message type
+
+   The initiator send packet with LinkStateType = 0, and it contains
+   sending timestamp.
+
+   Sequence Number: start from zero, add one after send request packet.
+   TimeStamp: sending timestamp.  HMAC(Optional): HMAC-SHA256 used for
+   message authentication.
+
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-    +-+-+-+-+-+-+-+-+
-    | LinkStateType |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    | LSType=0      |             MBZ                               |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                         Sequence Number                       |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                          TimeStamp                            |
     |                                                               |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                        HMAC(Optional)                         |
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                    Figure 9: SRoU OAM Link State Header
+               Figure 9: SRoU OAM Link State Request Message
 
-   The initiator send packet with LinkStateType = 0, The responder will
-   modify this flag to 1 and echo the entire packet back.  Other type
-   may defined for Two-way latency measurement which will be defined in
-   later rfc version.
+   The responder message is with LinkStateType = 1, and it contains:
 
-   LinkStateType:
+   Sequence Number: start from zero, add one after send response packet.
+   TimeStamp: sending timestamp.  Recieved Timestamp: the correspond
+   request message recieved timestamp.  Sender Sequence Number: exactly
+   copied from the correspond request message Sender Timestamp:exactly
+   copied from the correspond request message HMAC(Optional): HMAC-
+   SHA256 used for message authentication.
 
-                       +----+--------------+-------+
-                       | ID |     Type     | Usage |
-                       +====+==============+=======+
-                       |  0 | RTT_Request  |       |
-                       +----+--------------+-------+
-                       |  1 | RTT_Response |       |
-                       +----+--------------+-------+
 
-                           Table 7: oam linkstate
-                                message type
+
+
+
+
+
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 13]
+
+Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
+
+
+     0                   1                   2                   3
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    | LSType=1      |             MBZ                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                       Sequence Number                         |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                         TimeStamp                             |
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                     Recieved TimeStamp                        |
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                    Sender Sequence Number                     |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                       Sender TimeStamp                        |
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                        HMAC(Optional)                         |
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+              Figure 10: SRoU OAM Link State Response Message
 
 4.2.  STUN Service
 
@@ -714,21 +763,6 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
    server copy the recieve source address and port in this payload, and
    generate HMAC.  The STUN Server's key could be propogate to initiator
    by a out-of-band channel.
-
-
-
-
-
-
-
-
-
-
-
-Fang, et al.             Expires 28 January 2021               [Page 13]
-
-Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
-
 
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -741,7 +775,16 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
     |                                                               |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                      Figure 10: SRoU OAM STUN Header
+                      Figure 11: SRoU OAM STUN Header
+
+
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 14]
+
+Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
+
 
 5.  Usage
 
@@ -752,7 +795,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
                 |                                    |
                 R3----V1----PubliCloud--------V2-----|
 
-                Figure 11: Traffic Engineering over internet
+                Figure 12: Traffic Engineering over internet
 
    Many video/conferencing application requires traffic engineering over
    IPv4 Internet, Webex/Zoom/Teams may setup V1,V2 in public cloud, The
@@ -761,30 +804,19 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
 
 5.2.  Multipath forwarding
 
-   Same as previously topoloy Figure 11, customer cloud ask server
+   Same as previously topoloy Figure 12, customer cloud ask server
    transmit packet over different path, two path have same Flow-ID, QUIC
    could be used in this case to provide multistream/multihoming
    support.
 
 5.3.  Micro Segmentation
 
-   Same as previously topoloy Figure 11, the interim Router: R1/R2/R3,
+   Same as previously topoloy Figure 12, the interim Router: R1/R2/R3,
    V1,V2 could insert uSeg Sub-TLV based on client and server uSeg
    identity, and other interim network equipment could based on this
    sub-TLV implement security policy or QoS policy.
 
 5.4.  Container Network
-
-
-
-
-
-
-
-Fang, et al.             Expires 28 January 2021               [Page 14]
-
-Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
-
 
    C1----SideCar1-----L1-----S1------L2----SideCar2-------C2
                       |               |
@@ -793,13 +825,22 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
    L1,L2: Leaf switch
    S1,S2: Spine switch
 
-                Figure 12: Service-Mesh & Container Network
+                Figure 13: Service-Mesh & Container Network
 
    SRoU with QUIC also could be used for container network interface,
    especially for service-mesh sidecar.  The sidecar could aware the
    Datacenter underlay topology by BGP-LinkState, and use SRH select
    best path to avoid congestion.  At the same time, all traffic are
    encrypted by [I-D.ietf-quic-tls].
+
+
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 15]
+
+Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
+
 
 5.5.  MPLS-SR with SDWAN
 
@@ -808,7 +849,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
    S1,S2: SDWAN Router
    PE1,PE2: SR enabled MPLS PE
 
-                       Figure 13: MPLS-SR with SDWAN
+                       Figure 14: MPLS-SR with SDWAN
 
    S1 will setup IPSec SA with S2 for end-to-end encryption, And it will
    use BSID between PE1-PE2 for traffic engineering.
@@ -831,16 +872,7 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
      SegmenetList[0] = uSID: FC0:2222:3333:4444::
    }
 
-                 Figure 14: Type:0x1 S1-->PE1 Packet Header
-
-
-
-
-
-Fang, et al.             Expires 28 January 2021               [Page 15]
-
-Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
-
+                 Figure 15: Type:0x1 S1-->PE1 Packet Header
 
 5.6.  Cloud Native Network platform
 
@@ -855,6 +887,16 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
    K-V store. forwarding policy also could be sync by the K-V store.
    Detailed information will be provided in another I.D(ETCD based
    disaggregated SDN control plane).
+
+
+
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 16]
+
+Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
+
 
    SRoU forwarder also could be implement by BPF for container
    communication.  It will provide host level traffic engineering for
@@ -891,13 +933,6 @@ Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
    A blacklist on controller k-v store could be implemented to block
    device when the token does not expire.
 
-
-
-Fang, et al.             Expires 28 January 2021               [Page 16]
-
-Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
-
-
 7.  IANA Considerations
 
 7.1.  SRoU with QUIC
@@ -911,6 +946,13 @@ Acknowledgements
    document:
 
    *  Bin Shi, Cisco Systems, Inc.
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 17]
+
+Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
+
 
    *  Yijen Wang, Cisco Systems, Inc.
 
@@ -943,17 +985,6 @@ Normative References
               DOI 10.17487/RFC7510, April 2015,
               <https://www.rfc-editor.org/info/rfc7510>.
 
-
-
-
-
-
-
-Fang, et al.             Expires 28 January 2021               [Page 17]
-
-Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
-
-
    [RFC8663]  Xu, X., Bryant, S., Farrel, A., Hassan, S., Henderickx,
               W., and Z. Li, "MPLS Segment Routing over IP", RFC 8663,
               DOI 10.17487/RFC8663, December 2019,
@@ -970,6 +1001,14 @@ Informative References
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 18]
+
+Internet-Draft       Segment Routing over UDP(SRoU)            July 2020
+
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1005,4 +1044,21 @@ Authors' Addresses
 
 
 
-Fang, et al.             Expires 28 January 2021               [Page 18]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fang, et al.             Expires 30 January 2021               [Page 19]

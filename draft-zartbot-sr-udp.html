@@ -818,7 +818,7 @@ table.left {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fang, et al.</td>
-<td class="center">Expires 28 January 2021</td>
+<td class="center">Expires 30 January 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -831,12 +831,12 @@ table.left {
 <dd class="internet-draft">draft-zartbot-sr-udp-00</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2020-07-27" class="published">27 July 2020</time>
+<time datetime="2020-07-29" class="published">29 July 2020</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-01-28">28 January 2021</time></dd>
+<dd class="expires"><time datetime="2021-01-30">30 January 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -883,7 +883,7 @@ in UDP transport protocol with Network Address Translation Traversal.<a href="#s
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 January 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 January 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1768,33 +1768,10 @@ field, it could be store in option TLV.<a href="#section-3.4.3.2-1" class="pilcr
         <h3 id="name-link-state">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-link-state" class="section-name selfRef">Link State</a>
         </h3>
-<p id="section-4.1-1">Each enpoint could initial this OAM message to its peer with local generated
-sequence number and timestamp. This payload recommend to use private key 
-encrypted.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<span id="name-srou-oam-link-state-header"></span><div id="oam-ls-format">
-<figure id="figure-9">
-          <div class="artwork art-text alignLeft" id="section-4.1-2.1">
-<pre>
-  0                   1                   2                   3
-  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +-+-+-+-+-+-+-+-+
- | LinkStateType |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- |                         Sequence Number                       |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- |                          TimeStamp                            |
- |                                                               |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</pre>
-</div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
-<a href="#name-srou-oam-link-state-header" class="selfRef">SRoU OAM Link State Header</a>
-          </figcaption></figure>
-</div>
-<p id="section-4.1-3">The initiator send packet with LinkStateType = 0, The responder will modify this
-flag to 1 and echo the entire packet back. Other type may defined for Two-way 
-latency measurement which will be defined in later rfc version.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">LinkStateType:<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">The link state message is follow TWAMP algorithm.This OAM message could be used
+for both Authentication mode( with HMAC-SHA256) or Crypt mode(AES-GCM-256).
+Crypto key could be synchonized via out-of-band channel.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">LinkStateType:<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <span id="name-oam-linkstate-message-type"></span><div id="oam_linkstate_type">
 <table class="center" id="table-7">
           <caption>
@@ -1811,16 +1788,83 @@ latency measurement which will be defined in later rfc version.<a href="#section
           <tbody>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">0</td>
-              <td class="text-center" rowspan="1" colspan="1">RTT_Request</td>
+              <td class="text-center" rowspan="1" colspan="1">LinkState_Request</td>
               <td class="text-left" rowspan="1" colspan="1"> </td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">1</td>
-              <td class="text-center" rowspan="1" colspan="1">RTT_Response</td>
+              <td class="text-center" rowspan="1" colspan="1">LinkState_Response</td>
               <td class="text-left" rowspan="1" colspan="1"> </td>
             </tr>
           </tbody>
         </table>
+</div>
+<p id="section-4.1-4">The initiator send packet with LinkStateType = 0, and it contains sending 
+timestamp.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">Sequence Number: start from zero, add one after send request packet.
+TimeStamp: sending timestamp.
+HMAC(Optional): HMAC-SHA256 used for message authentication.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<span id="name-srou-oam-link-state-request"></span><div id="oam-ls-req-format">
+<figure id="figure-9">
+          <div class="artwork art-text alignLeft" id="section-4.1-6.1">
+<pre>
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | LSType=0      |             MBZ                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                         Sequence Number                       |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                          TimeStamp                            |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                        HMAC(Optional)                         |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</pre>
+</div>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-srou-oam-link-state-request" class="selfRef">SRoU OAM Link State Request Message</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.1-7">The responder message is with LinkStateType = 1, and it contains:<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+<p id="section-4.1-8">Sequence Number: start from zero, add one after send response packet.
+TimeStamp: sending timestamp.
+Recieved Timestamp: the correspond request message recieved timestamp.
+Sender Sequence Number: exactly copied from the correspond request message
+Sender Timestamp:exactly copied from the correspond request message
+HMAC(Optional): HMAC-SHA256 used for message authentication.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+<span id="name-srou-oam-link-state-respons"></span><div id="oam-ls-resp-format">
+<figure id="figure-10">
+          <div class="artwork art-text alignLeft" id="section-4.1-9.1">
+<pre>
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | LSType=1      |             MBZ                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       Sequence Number                         |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                         TimeStamp                             |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                     Recieved TimeStamp                        |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                    Sender Sequence Number                     |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       Sender TimeStamp                        |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                        HMAC(Optional)                         |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+</div>
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<a href="#name-srou-oam-link-state-respons" class="selfRef">SRoU OAM Link State Response Message</a>
+          </figcaption></figure>
 </div>
 </section>
 </div>
@@ -1835,7 +1879,7 @@ discover the public network address.<a href="#section-4.2-1" class="pilcrow">¶<
 copy the recieve source address and port in this payload, and generate HMAC.
 The STUN Server's key could be propogate to initiator by a out-of-band channel.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <span id="name-srou-oam-stun-header"></span><div id="oam-stun-format">
-<figure id="figure-10">
+<figure id="figure-11">
           <div class="artwork art-text alignLeft" id="section-4.2-3.1">
 <pre>
   0                   1                   2                   3
@@ -1850,7 +1894,7 @@ The STUN Server's key could be propogate to initiator by a out-of-band channel.<
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 </div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-srou-oam-stun-header" class="selfRef">SRoU OAM STUN Header</a>
           </figcaption></figure>
 </div>
@@ -1869,7 +1913,7 @@ The STUN Server's key could be propogate to initiator by a out-of-band channel.<
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-traffic-engineering-over-in" class="section-name selfRef">Traffic engineering over Internet</a>
         </h3>
 <span id="name-traffic-engineering-over-int"></span><div id="use-1">
-<figure id="figure-11">
+<figure id="figure-12">
           <div class="artwork art-text alignLeft" id="section-5.1-1.1">
 <pre>
 Client-------R1------------Internet--------------R2-----------Server
@@ -1878,7 +1922,7 @@ Client-------R1------------Internet--------------R2-----------Server
              R3----V1----PubliCloud--------V2-----|
 </pre>
 </div>
-<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
 <a href="#name-traffic-engineering-over-int" class="selfRef">Traffic Engineering over internet</a>
           </figcaption></figure>
 </div>
@@ -1892,7 +1936,7 @@ server could encode the V1/V2 information in SRoU header for traffic engineering
         <h3 id="name-multipath-forwarding">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-multipath-forwarding" class="section-name selfRef">Multipath forwarding</a>
         </h3>
-<p id="section-5.2-1">Same as previously topoloy <a href="#use-1" class="xref">Figure 11</a>, customer cloud ask server transmit packet
+<p id="section-5.2-1">Same as previously topoloy <a href="#use-1" class="xref">Figure 12</a>, customer cloud ask server transmit packet
 over different path, two path have same Flow-ID, QUIC could be used in this case
 to provide multistream/multihoming support.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 </section>
@@ -1902,7 +1946,7 @@ to provide multistream/multihoming support.<a href="#section-5.2-1" class="pilcr
         <h3 id="name-micro-segmentation">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-micro-segmentation" class="section-name selfRef">Micro Segmentation</a>
         </h3>
-<p id="section-5.3-1">Same as previously topoloy <a href="#use-1" class="xref">Figure 11</a>, the interim Router: R1/R2/R3, V1,V2 could
+<p id="section-5.3-1">Same as previously topoloy <a href="#use-1" class="xref">Figure 12</a>, the interim Router: R1/R2/R3, V1,V2 could
 insert uSeg Sub-TLV based on client and server uSeg identity, and other interim
 network equipment could based on this sub-TLV implement security policy or QoS
 policy.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
@@ -1914,7 +1958,7 @@ policy.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-container-network" class="section-name selfRef">Container Network</a>
         </h3>
 <span id="name-service-mesh-container-netw"></span><div id="use-3">
-<figure id="figure-12">
+<figure id="figure-13">
           <div class="artwork art-text alignLeft" id="section-5.4-1.1">
 <pre>
 C1----SideCar1-----L1-----S1------L2----SideCar2-------C2
@@ -1925,7 +1969,7 @@ L1,L2: Leaf switch
 S1,S2: Spine switch
 </pre>
 </div>
-<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
 <a href="#name-service-mesh-container-netw" class="selfRef">Service-Mesh &amp; Container Network</a>
           </figcaption></figure>
 </div>
@@ -1941,7 +1985,7 @@ At the same time, all traffic are encrypted by <span>[<a href="#I-D.ietf-quic-tl
 <a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-mpls-sr-with-sdwan" class="section-name selfRef">MPLS-SR with SDWAN</a>
         </h3>
 <span id="name-mpls-sr-with-sdwan-2"></span><div id="sr-sdwan-topology">
-<figure id="figure-13">
+<figure id="figure-14">
           <div class="artwork art-text alignLeft" id="section-5.5-1.1">
 <pre>
 S1---INET(ipv4)----PE1------MPLS------PE2----S2
@@ -1950,7 +1994,7 @@ S1,S2: SDWAN Router
 PE1,PE2: SR enabled MPLS PE
 </pre>
 </div>
-<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
+<figcaption><a href="#figure-14" class="selfRef">Figure 14</a>:
 <a href="#name-mpls-sr-with-sdwan-2" class="selfRef">MPLS-SR with SDWAN</a>
           </figcaption></figure>
 </div>
@@ -1959,7 +2003,7 @@ And it will use BSID between PE1-PE2 for traffic engineering.<a href="#section-5
 <p id="section-5.5-3">MPLS based BSID and IPv4 based locator could be encoded in uSID.A distributed
 mapping table could be used to translate uSID to packet action.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
 <span id="name-type0x1-s1-pe1-packet-heade"></span><div id="type-1-s1-pe1">
-<figure id="figure-14">
+<figure id="figure-15">
           <div class="artwork art-text alignLeft" id="section-5.5-4.1">
 <pre>
 IP/UDP Header {
@@ -1977,7 +2021,7 @@ SRoU Header {
 }
 </pre>
 </div>
-<figcaption><a href="#figure-14" class="selfRef">Figure 14</a>:
+<figcaption><a href="#figure-15" class="selfRef">Figure 15</a>:
 <a href="#name-type0x1-s1-pe1-packet-heade" class="selfRef">Type:0x1 S1--&gt;PE1 Packet Header</a>
           </figcaption></figure>
 </div>
