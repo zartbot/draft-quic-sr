@@ -474,17 +474,14 @@ PMType:
 
 |ID    | Type            | Usage                                       |
 |-----:|:---------------:|:--------------------------------------------|
-|  0   | PM_Request      |                                             |
-|  1   | PM_Response     |                                             |
+|  0   | PM_Request      | Performance Measurement                     |
+|  1   | PM_Response     | Performance Measurement                     |
 {: #oam_pm_type title="oam perf measurement message type"}
 
 
+### PM_Request Message
 The initiator send packet with PMType = 0, and it contains sending 
 timestamp.
-
-Sequence Number: start from zero, add one after send request packet.
-TimeStamp: sending timestamp.
-HMAC(Optional): HMAC-SHA256 used for message authentication.
 
 ~~~
   0                   1                   2                   3
@@ -500,19 +497,21 @@ HMAC(Optional): HMAC-SHA256 used for message authentication.
  |                        HMAC(Optional)                         |
  |                                                               |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 ~~~
 {: #oam-ls-req-format title="SRoU OAM Perf Measurement Request Message"}
 
+Sequence Number: 
+    Start from zero, add one after send request packet.
 
+TimeStamp: 
+    Packet sending timestamp.
+
+HMAC(Optional): 
+    HMAC-SHA256 used for message authentication.
+
+
+### PM_Response Message
 The responder message is with PMType = 1, and it contains:
-
-Sequence Number: start from zero, add one after send response packet.
-TimeStamp: sending timestamp.
-Recieved Timestamp: the correspond request message recieved timestamp.
-Sender Sequence Number: exactly copied from the correspond request message
-Sender Timestamp:exactly copied from the correspond request message
-HMAC(Optional): HMAC-SHA256 used for message authentication.
 
 ~~~
   0                   1                   2                   3
@@ -538,6 +537,25 @@ HMAC(Optional): HMAC-SHA256 used for message authentication.
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 {: #oam-pm-resp-format title="SRoU OAM Perf Measurement Response Message"}
+
+Sequence Number: 
+    Start from zero, add one after send response packet.
+
+TimeStamp: 
+    sending timestamp.
+
+Recieved Timestamp: 
+    The correspond request message recieved timestamp.
+
+Sender Sequence Number: 
+    Exactly copied from the correspond request message
+
+Sender Timestamp:
+    Exactly copied from the correspond request message
+
+HMAC(Optional): 
+    HMAC-SHA256 used for message authentication.
+
 
 ## STUN Service
 
