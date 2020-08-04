@@ -251,6 +251,7 @@ H1,H2: Host
 In this mode, the endpoint could directly insert the interim node IPv4
 addresses and port into the segment-list.
 
+### General forwarding case
 For example, H1 intend to send packet to H2 via R1-->I2---->H2, 
 In this case SRoU packet will be NATed twice to show the NAT traversal workflow.
 I2's public address could use STUN{{!RFC5389}} protocol detected and sync to all 
@@ -362,6 +363,19 @@ UDP Payload {
 }
 ~~~
 {: #type-1-h2tx title="Type:0x1 H2 Send to UDP socket"}
+
+### Programable forwarding case
+
+In type:0x1 mode, each segment has 48bit(32bit IPv4 address with 16bit port).
+It could be defined for programable forwarding with special IPv4 prefix( ie. 
+255.0.0.0/8):
+
+Prefix:<32bit functions and args>
+
+For exmaple we could defined EVPN/VPNv4/VPNv6 function in SRoU header by SID:
+
+255:<16bit End.X function>:<24bit VPN ID>
+
 
 ## Type:0x2, SRv6 format {#srv6-locator}
 
