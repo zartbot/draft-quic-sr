@@ -13,7 +13,7 @@
        This document defines the Segment Routing Header  extension
 in UDP transport protocol with Network Address Translation Traversal. 
     " name="description">
-<meta content="xml2rfc 2.46.0" name="generator">
+<meta content="xml2rfc 2.44.0" name="generator">
 <meta content="draft-zartbot-sr-udp-00" name="ietf.draft">
 <link href="draft-zartbot-sr-udp.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -77,9 +77,6 @@ p {
   padding: 0;
   margin: 0.5em 0;
   text-align: left;
-}
-div, span {
-  position: relative;
 }
 div {
   margin: 0;
@@ -272,9 +269,19 @@ cite {
 
 /* tables */
 table {
-  width: 100%;
+  max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
 }
 thead, tbody {
   border: 1px solid var(--line-color);
@@ -285,8 +292,7 @@ th, td {
   padding: 5px 10px;
 }
 th {
-  text-align: left;
-  background-color: #eee;
+  background-color: var(--line-color);
 }
 tr:nth-child(2n) > td {
   background-color: var(--background-color);
@@ -305,8 +311,6 @@ table caption {
   padding: 3px 1em;
 }
 table p {
-  /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
-     be allowed within tables more generally, it would be far better to select on a class. */
   margin: 0;
 }
 
@@ -764,21 +768,6 @@ address div.right {
   text-align: right;
 }
 
-/* Provide table alignment support.  We can't use the alignX classes above
-   since they do unwanted things with caption and other styling. */
-table.right {
- margin-left: auto;
- margin-right: 0;
-}
-table.center {
- margin-left: auto;
- margin-right: auto;
-}
-table.left {
- margin-left: 0;
- margin-right: auto;
-}
-
 /* Give the table caption label the same styling as the figcaption */
 
 @media print {
@@ -818,7 +807,7 @@ table.left {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fang, et al.</td>
-<td class="center">Expires 5 February 2021</td>
+<td class="center">Expires 18 February 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -831,12 +820,12 @@ table.left {
 <dd class="internet-draft">draft-zartbot-sr-udp-00</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2020-08-04" class="published">4 August 2020</time>
+<time datetime="2020-08-17" class="published">17 August 2020</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-02-05">5 February 2021</time></dd>
+<dd class="expires"><time datetime="2021-02-18">18 February 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -883,7 +872,7 @@ in UDP transport protocol with Network Address Translation Traversal.<a href="#s
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 February 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 February 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -911,138 +900,138 @@ in UDP transport protocol with Network Address Translation Traversal.<a href="#s
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.1">
+<nav class="toc"><ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.1.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-specification-of-requiremen" class="xref">Specification of Requirements</a><a href="#section-toc.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.1.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.1.2.2">
                 <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="xref">1.2</a>.  <a href="#name-motivation" class="xref">Motivation</a><a href="#section-toc.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.2">
+<li class="toc ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-sr-over-udpsrou-packet-enca" class="xref">SR over UDP(SRoU) Packet encapsulation</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.2.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.2.2.1">
                 <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="xref">2.1</a>.  <a href="#name-sr-over-udpsrou-header" class="xref">SR over UDP(SRoU) Header</a><a href="#section-toc.1-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.3">
+<li class="toc ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-packet-processing" class="xref">Packet Processing</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.3.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-type0x1-ipv4-locator-mode" class="xref">Type:0x1, IPv4 Locator Mode</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.3.2.1.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.1.2.1">
                     <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="xref">3.1.1</a>.  <a href="#name-general-forwarding-case" class="xref">General forwarding case</a><a href="#section-toc.1-1.3.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.1.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.1.2.2">
                     <p id="section-toc.1-1.3.2.1.2.2.1"><a href="#section-3.1.2" class="xref">3.1.2</a>.  <a href="#name-programable-forwarding-case" class="xref">Programable forwarding case</a><a href="#section-toc.1-1.3.2.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                </ul>
+</ul>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-type0x2-srv6-format" class="xref">Type:0x2, SRv6 format</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.3">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-type0x3-compressed-segment-" class="xref">Type:0x3, Compressed Segment List</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.3.2.3.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.3.2.1">
                     <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="xref">3.3.1</a>.  <a href="#name-service-registration-mappin" class="xref">Service Registration &amp; Mapping</a><a href="#section-toc.1-1.3.2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                </ul>
+</ul>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.4">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.4">
                 <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="xref">3.4</a>.  <a href="#name-optional-tlv-2" class="xref">Optional TLV</a><a href="#section-toc.1-1.3.2.4.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.3.2.4.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.4.2.1">
                     <p id="section-toc.1-1.3.2.4.2.1.1"><a href="#section-3.4.1" class="xref">3.4.1</a>.  <a href="#name-sr-integrity-tlv" class="xref">SR Integrity TLV</a><a href="#section-toc.1-1.3.2.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.4.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.4.2.2">
                     <p id="section-toc.1-1.3.2.4.2.2.1"><a href="#section-3.4.2" class="xref">3.4.2</a>.  <a href="#name-micro-segmentationuseg" class="xref">Micro-segmentation(uSeg)</a><a href="#section-toc.1-1.3.2.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.4.2.3">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.4.2.3">
                     <p id="section-toc.1-1.3.2.4.2.3.1"><a href="#section-3.4.3" class="xref">3.4.3</a>.  <a href="#name-endpacketinfo" class="xref">End.PacketInfo</a><a href="#section-toc.1-1.3.2.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
-                </ul>
+</ul>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.4">
+<li class="toc ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-oam" class="xref">OAM</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.4.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="xref">4.1</a>.  <a href="#name-performance-measurement" class="xref">Performance Measurement</a><a href="#section-toc.1-1.4.2.1.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.4.2.1.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.1.2.1">
                     <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="xref">4.1.1</a>.  <a href="#name-pm_request-message" class="xref">PM_Request Message</a><a href="#section-toc.1-1.4.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="ulEmpty compact toc" id="section-toc.1-1.4.2.1.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.1.2.2">
                     <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="xref">4.1.2</a>.  <a href="#name-pm_response-message" class="xref">PM_Response Message</a><a href="#section-toc.1-1.4.2.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                </ul>
+</ul>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.4.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="xref">4.2</a>.  <a href="#name-stun-service" class="xref">STUN Service</a><a href="#section-toc.1-1.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.5">
+<li class="toc ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-usage" class="xref">Usage</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.5.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-traffic-engineering-over-in" class="xref">Traffic engineering over Internet</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-multipath-forwarding" class="xref">Multipath forwarding</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.3">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="xref">5.3</a>.  <a href="#name-micro-segmentation" class="xref">Micro Segmentation</a><a href="#section-toc.1-1.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.4">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.4">
                 <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="xref">5.4</a>.  <a href="#name-container-network" class="xref">Container Network</a><a href="#section-toc.1-1.5.2.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.5">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.5">
                 <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="xref">5.5</a>.  <a href="#name-mpls-sr-with-sdwan" class="xref">MPLS-SR with SDWAN</a><a href="#section-toc.1-1.5.2.5.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.6">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.6">
                 <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="xref">5.6</a>.  <a href="#name-cloud-native-network-platfo" class="xref">Cloud Native Network platform</a><a href="#section-toc.1-1.5.2.6.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.6">
+<li class="toc ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.7">
+<li class="toc ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.7.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.1">
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-srou-with-quic" class="xref">SRoU with QUIC</a><a href="#section-toc.1-1.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.8">
+<li class="toc ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref"></a><a href="#name-acknowledgements" class="xref">Acknowledgements</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.9">
+<li class="toc ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref"></a><a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.9.2.1">
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.9.2.1">
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref"></a><a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.9.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.9.2.2">
+<li class="toc ulEmpty" id="section-toc.1-1.9.2.2">
                 <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref"></a><a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.9.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
+</ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.10">
+<li class="toc ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-appendix.a" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
-        </ul>
+</ul>
 </nav>
 </section>
 </div>
@@ -1270,37 +1259,37 @@ insert in UDP payload.<a href="#section-2-1" class="pilcrow">¶</a></p>
           </tbody>
         </table>
 </div>
-<span class="break"></span><dl class="dlParallel" id="section-2.1-12">
+<dl class="dlParallel" id="section-2.1-12">
           <dt id="section-2.1-12.1">SR Hdr Len:</dt>
-          <dd id="section-2.1-12.2">
+<dd id="section-2.1-12.2">
   SR Header length, include the SR Header flags  Segment-List and Optional TLV.<a href="#section-2.1-12.2" class="pilcrow">¶</a>
 </dd>
-          <dd class="break"></dd>
+<dd class="break"></dd>
 <dt id="section-2.1-12.3">Last Entry:</dt>
-          <dd id="section-2.1-12.4">
+<dd id="section-2.1-12.4">
   contains the index(zero based), in the Segment List, of
 the last element of the Segment List.<a href="#section-2.1-12.4" class="pilcrow">¶</a>
 </dd>
-          <dd class="break"></dd>
+<dd class="break"></dd>
 <dt id="section-2.1-12.5">Segments Left:</dt>
-          <dd id="section-2.1-12.6">
+<dd id="section-2.1-12.6">
   8-bit unsigned integer. Number of route segemnts remaining,
 i.e., number of explicitly listed intermediate nodes still
 to be visited before reaching the final destination.<a href="#section-2.1-12.6" class="pilcrow">¶</a>
 </dd>
-          <dd class="break"></dd>
+<dd class="break"></dd>
 <dt id="section-2.1-12.7">Segment List[0..n]:</dt>
-          <dd id="section-2.1-12.8">
+<dd id="section-2.1-12.8">
   128-bit/48-bit/144-bit addresses to represent the SR Policy.
 Detailed forwarding behavior will be defined in <a href="#pkt-proccessing" class="xref">Section 3</a><a href="#section-2.1-12.8" class="pilcrow">¶</a>
 </dd>
-          <dd class="break"></dd>
+<dd class="break"></dd>
 <dt id="section-2.1-12.9">TLV:</dt>
-          <dd id="section-2.1-12.10">
+<dd id="section-2.1-12.10">
   Opptional TLV used for future extension.currently only defined
 the following TLV.<a href="#section-2.1-12.10" class="pilcrow">¶</a>
 </dd>
-        <dd class="break"></dd>
+<dd class="break"></dd>
 </dl>
 <span id="name-optional-tlv"></span><div id="optional-tlv-types">
 <table class="center" id="table-3">
@@ -2107,26 +2096,26 @@ will provide host level traffic engineering for massive scale datacenter to
 reduce the West-East traffic congestion.<a href="#section-5.6-3" class="pilcrow">¶</a></p>
 <p id="section-5.6-4">The best practice for SRoU is working with QUIC.
 SRoU with QUIC transport protocol provides the following benefit for SDWAN :<a href="#section-5.6-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.6-5.1">Stream multiplexing<a href="#section-5.6-5.1" class="pilcrow">¶</a>
+<ul>
+<li id="section-5.6-5.1">Stream multiplexing<a href="#section-5.6-5.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.6-5.2">Stream and connection-level flow control<a href="#section-5.6-5.2" class="pilcrow">¶</a>
+<li id="section-5.6-5.2">Stream and connection-level flow control<a href="#section-5.6-5.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.6-5.3">Low-latency connection establishment<a href="#section-5.6-5.3" class="pilcrow">¶</a>
+<li id="section-5.6-5.3">Low-latency connection establishment<a href="#section-5.6-5.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.6-5.4">Connection migration and resilience to NAT rebinding<a href="#section-5.6-5.4" class="pilcrow">¶</a>
+<li id="section-5.6-5.4">Connection migration and resilience to NAT rebinding<a href="#section-5.6-5.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.6-5.5">Authenticated and encrypted header and payload<a href="#section-5.6-5.5" class="pilcrow">¶</a>
+<li id="section-5.6-5.5">Authenticated and encrypted header and payload<a href="#section-5.6-5.5" class="pilcrow">¶</a>
 </li>
-        </ul>
+</ul>
 <p id="section-5.6-6">SRoU add traffic-engineering and VPN capabilites for SDWAN.
 Many existing SDWAN features could gain the benefits like:<a href="#section-5.6-6" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.6-7.1">TCP optimization<a href="#section-5.6-7.1" class="pilcrow">¶</a>
+<ul>
+<li id="section-5.6-7.1">TCP optimization<a href="#section-5.6-7.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.6-7.2">Packet duplication<a href="#section-5.6-7.2" class="pilcrow">¶</a>
+<li id="section-5.6-7.2">Packet duplication<a href="#section-5.6-7.2" class="pilcrow">¶</a>
 </li>
-        </ul>
+</ul>
 </section>
 </div>
 </section>
@@ -2166,14 +2155,14 @@ packet format.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
       </h2>
 <p id="section-8-1">The following people provided substantial contributions to this document:<a href="#section-8-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-8-2.1">Bin Shi, Cisco Systems, Inc.<a href="#section-8-2.1" class="pilcrow">¶</a>
+<ul>
+<li id="section-8-2.1">Bin Shi, Cisco Systems, Inc.<a href="#section-8-2.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-8-2.2">Yijen Wang, Cisco Systems, Inc.<a href="#section-8-2.2" class="pilcrow">¶</a>
+<li id="section-8-2.2">Yijen Wang, Cisco Systems, Inc.<a href="#section-8-2.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-8-2.3">Pix Xu, Cisco Systems, Inc.<a href="#section-8-2.3" class="pilcrow">¶</a>
+<li id="section-8-2.3">Pix Xu, Cisco Systems, Inc.<a href="#section-8-2.3" class="pilcrow">¶</a>
 </li>
-      </ul>
+</ul>
 </section>
 </div>
 <section id="section-9">
@@ -2186,28 +2175,28 @@ packet format.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
         </h3>
 <dl class="references">
 <dt id="I-D.ietf-quic-datagram">[I-D.ietf-quic-datagram]</dt>
-        <dd>
-<span class="refAuthor">Pauly, T.</span><span class="refAuthor">, Kinnear, E.</span><span class="refAuthor">, and D. Schinazi</span>, <span class="refTitle">"An Unreliable Datagram Extension to QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-datagram-00</span>, <time datetime="2020-02-26" class="refDate">26 February 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-quic-datagram-00.txt">http://www.ietf.org/internet-drafts/draft-ietf-quic-datagram-00.txt</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Pauly, T.</span><span class="refAuthor">, Kinnear, E.</span><span class="refAuthor">, and D. Schinazi</span>, <span class="refTitle">"An Unreliable Datagram Extension to QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-datagram-00</span>, <time datetime="2020-02-26">26 February 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-quic-datagram-00.txt">http://www.ietf.org/internet-drafts/draft-ietf-quic-datagram-00.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-quic-tls">[I-D.ietf-quic-tls]</dt>
-        <dd>
-<span class="refAuthor">Thomson, M.</span><span class="refAuthor"> and S. Turner</span>, <span class="refTitle">"Using TLS to Secure QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-tls-29</span>, <time datetime="2020-06-09" class="refDate">9 June 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-quic-tls-29.txt">http://www.ietf.org/internet-drafts/draft-ietf-quic-tls-29.txt</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Thomson, M.</span><span class="refAuthor"> and S. Turner</span>, <span class="refTitle">"Using TLS to Secure QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-tls-29</span>, <time datetime="2020-06-09">9 June 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-quic-tls-29.txt">http://www.ietf.org/internet-drafts/draft-ietf-quic-tls-29.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5389">[RFC5389]</dt>
-        <dd>
-<span class="refAuthor">Rosenberg, J.</span><span class="refAuthor">, Mahy, R.</span><span class="refAuthor">, Matthews, P.</span><span class="refAuthor">, and D. Wing</span>, <span class="refTitle">"Session Traversal Utilities for NAT (STUN)"</span>, <span class="seriesInfo">RFC 5389</span>, <span class="seriesInfo">DOI 10.17487/RFC5389</span>, <time datetime="2008-10" class="refDate">October 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5389">https://www.rfc-editor.org/info/rfc5389</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Rosenberg, J.</span><span class="refAuthor">, Mahy, R.</span><span class="refAuthor">, Matthews, P.</span><span class="refAuthor">, and D. Wing</span>, <span class="refTitle">"Session Traversal Utilities for NAT (STUN)"</span>, <span class="seriesInfo">RFC 5389</span>, <span class="seriesInfo">DOI 10.17487/RFC5389</span>, <time datetime="2008-10">October 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5389">https://www.rfc-editor.org/info/rfc5389</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7510">[RFC7510]</dt>
-        <dd>
-<span class="refAuthor">Xu, X.</span><span class="refAuthor">, Sheth, N.</span><span class="refAuthor">, Yong, L.</span><span class="refAuthor">, Callon, R.</span><span class="refAuthor">, and D. Black</span>, <span class="refTitle">"Encapsulating MPLS in UDP"</span>, <span class="seriesInfo">RFC 7510</span>, <span class="seriesInfo">DOI 10.17487/RFC7510</span>, <time datetime="2015-04" class="refDate">April 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7510">https://www.rfc-editor.org/info/rfc7510</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Xu, X.</span><span class="refAuthor">, Sheth, N.</span><span class="refAuthor">, Yong, L.</span><span class="refAuthor">, Callon, R.</span><span class="refAuthor">, and D. Black</span>, <span class="refTitle">"Encapsulating MPLS in UDP"</span>, <span class="seriesInfo">RFC 7510</span>, <span class="seriesInfo">DOI 10.17487/RFC7510</span>, <time datetime="2015-04">April 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7510">https://www.rfc-editor.org/info/rfc7510</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8663">[RFC8663]</dt>
-        <dd>
-<span class="refAuthor">Xu, X.</span><span class="refAuthor">, Bryant, S.</span><span class="refAuthor">, Farrel, A.</span><span class="refAuthor">, Hassan, S.</span><span class="refAuthor">, Henderickx, W.</span><span class="refAuthor">, and Z. Li</span>, <span class="refTitle">"MPLS Segment Routing over IP"</span>, <span class="seriesInfo">RFC 8663</span>, <span class="seriesInfo">DOI 10.17487/RFC8663</span>, <time datetime="2019-12" class="refDate">December 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8663">https://www.rfc-editor.org/info/rfc8663</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Xu, X.</span><span class="refAuthor">, Bryant, S.</span><span class="refAuthor">, Farrel, A.</span><span class="refAuthor">, Hassan, S.</span><span class="refAuthor">, Henderickx, W.</span><span class="refAuthor">, and Z. Li</span>, <span class="refTitle">"MPLS Segment Routing over IP"</span>, <span class="seriesInfo">RFC 8663</span>, <span class="seriesInfo">DOI 10.17487/RFC8663</span>, <time datetime="2019-12">December 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8663">https://www.rfc-editor.org/info/rfc8663</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8754">[RFC8754]</dt>
-      <dd>
-<span class="refAuthor">Filsfils, C., Ed.</span><span class="refAuthor">, Dukes, D., Ed.</span><span class="refAuthor">, Previdi, S.</span><span class="refAuthor">, Leddy, J.</span><span class="refAuthor">, Matsushima, S.</span><span class="refAuthor">, and D. Voyer</span>, <span class="refTitle">"IPv6 Segment Routing Header (SRH)"</span>, <span class="seriesInfo">RFC 8754</span>, <span class="seriesInfo">DOI 10.17487/RFC8754</span>, <time datetime="2020-03" class="refDate">March 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8754">https://www.rfc-editor.org/info/rfc8754</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Filsfils, C., Ed.</span><span class="refAuthor">, Dukes, D., Ed.</span><span class="refAuthor">, Previdi, S.</span><span class="refAuthor">, Leddy, J.</span><span class="refAuthor">, Matsushima, S.</span><span class="refAuthor">, and D. Voyer</span>, <span class="refTitle">"IPv6 Segment Routing Header (SRH)"</span>, <span class="seriesInfo">RFC 8754</span>, <span class="seriesInfo">DOI 10.17487/RFC8754</span>, <time datetime="2020-03">March 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8754">https://www.rfc-editor.org/info/rfc8754</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2217,12 +2206,12 @@ packet format.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
         </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
-        <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-      <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
