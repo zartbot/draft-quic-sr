@@ -950,6 +950,9 @@ Segment Routing over UDP.<a href="#section-abstract-1" class="pilcrow">¶</a></p
 <li class="toc ulEmpty" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-access-control" class="xref">Access Control</a><a href="#section-toc.1-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
+<li class="toc ulEmpty" id="section-toc.1-1.8.2.3">
+                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="xref">8.3</a>.  <a href="#name-user-identity" class="xref">User identity</a><a href="#section-toc.1-1.8.2.3.1" class="pilcrow">¶</a></p>
+</li>
 </ul>
 </li>
 <li class="toc ulEmpty" id="section-toc.1-1.9">
@@ -1215,6 +1218,20 @@ This token could grant or revoke by a policy engine.<a href="#section-8.2-1" cla
 <p id="section-8.2-2">Key="/token/permit/flowid"
 Key="/token/block/flowid"<a href="#section-8.2-2" class="pilcrow">¶</a></p>
 <p id="section-8.2-3">Each node could sync this table to execute the access control policy.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="user-identity">
+<section id="section-8.3">
+        <h3 id="name-user-identity">
+<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-user-identity" class="section-name selfRef">User identity</a>
+        </h3>
+<p id="section-8.3-1">Each of the endpoint may have it's identity or group policy tags, it could be
+updated by<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-2">key="/identity/userid/user_device_id"
+value="group policy tags"<a href="#section-8.3-2" class="pilcrow">¶</a></p>
+<p id="section-8.3-3">Group policy could be updated and store in ETCD by<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.3-4">key="/policy/src_grp/dst_grp"
+value="actions"<a href="#section-8.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

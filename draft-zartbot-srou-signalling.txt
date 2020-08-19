@@ -75,10 +75,11 @@ Table of Contents
    8.  Control Policy  . . . . . . . . . . . . . . . . . . . . . . .   6
      8.1.  Route control . . . . . . . . . . . . . . . . . . . . . .   6
      8.2.  Access Control  . . . . . . . . . . . . . . . . . . . . .   6
+     8.3.  User identity . . . . . . . . . . . . . . . . . . . . . .   6
    9.  Distributed KV Store  . . . . . . . . . . . . . . . . . . . .   6
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .   6
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .   7
    Informative References  . . . . . . . . . . . . . . . . . . . . .   7
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
@@ -104,7 +105,6 @@ Table of Contents
    SRoU support udp transport session over internet, but it lack of
    reachability detection and routing control, existing routing protocol
    like BGP-EVPN did not provide Dynamic NAT traversal capability.
-
 
 
 
@@ -311,6 +311,17 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
 
    Each node could sync this table to execute the access control policy.
 
+8.3.  User identity
+
+   Each of the endpoint may have it's identity or group policy tags, it
+   could be updated by
+
+   key="/identity/userid/user_device_id" value="group policy tags"
+
+   Group policy could be updated and store in ETCD by
+
+   key="/policy/src_grp/dst_grp" value="actions"
+
 9.  Distributed KV Store
 
    ETCD is used in our prototype, we deploy an etcd cluster in main
@@ -318,6 +329,14 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
    sure the node could be available connect to the entire system.  In
    some on-prem deployment, each of the nodes could act as a ETCD proxy
    to help other node register to KV store.
+
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 6]
+
+Internet-DrafDistributed KV Store based Routing protocol for August 2020
+
 
 10.  Security Considerations
 
@@ -330,13 +349,6 @@ Acknowledgements
 
    The following people provided substantial contributions to this
    document:
-
-
-
-Fang, et al.            Expires 20 February 2021                [Page 6]
-
-Internet-DrafDistributed KV Store based Routing protocol for August 2020
-
 
    *  Yijen Wang, Cisco Systems, Inc.
 
@@ -374,6 +386,14 @@ Authors' Addresses
    Xing Jiang
    Cisco Systems, Inc.
 
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 7]
+
+Internet-DrafDistributed KV Store based Routing protocol for August 2020
+
+
    Email: jamjiang@cisco.com
 
 
@@ -389,4 +409,40 @@ Authors' Addresses
 
 
 
-Fang, et al.            Expires 20 February 2021                [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 8]

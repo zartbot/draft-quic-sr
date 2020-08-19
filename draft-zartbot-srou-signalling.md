@@ -216,6 +216,19 @@ Key="/token/block/flowid"
 
 Each node could sync this table to execute the access control policy.
 
+## User identity
+
+Each of the endpoint may have it's identity or group policy tags, it could be
+updated by
+
+key="/identity/userid/user_device_id"
+value="group policy tags"
+
+Group policy could be updated and store in ETCD by
+
+key="/policy/src_grp/dst_grp"
+value="actions"
+
 
 # Distributed KV Store
 ETCD is used in our prototype, we deploy an etcd cluster in main datacenter
