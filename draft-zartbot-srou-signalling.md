@@ -80,20 +80,12 @@ Each Node has the following attribute
 1. Role:  the system contains different node type, role attribute is a uint16
 value which contains: 
 
-  
-| Type | Name        |Section                                                  |
-|-----:|:------------|:--------------------------------------------------------|
-|  0x0 | STUN        | This node is used as a STUN server to help other nodes  |
-|      |             | discovery their public address.This node must deploy    |
-|      |             | with a public internet address or behind static 1:1 NAT |
-|-----:|:------------|:--------------------------------------------------------|
-|  0x1 | Fabric      | This node type is used as a interim node to relay the   |
-|      |             | SRoU traffic, this node MUST initial TWAMP link probe to| 
-|      |             | other Fabric node and report linkstate to KV Store.     |
-|-----:|:------------|:--------------------------------------------------------|
-|  0x2 | Linecard    | This node type is used to connect existing network, it  |
-|      |             | could use TWAMP probe other Fabric Node or Linecard node|
-|-----:|:------------|:--------------------------------------------------------|
+| Type | Name        |Section                                                                                                                                                              |
+|-----:|:------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  0x0 | STUN        | This node is used as a STUN server to help other nodes discovery their public address.This node must deploy with a public internet address or behind static 1:1 NAT |
+|  0x1 | Fabric      | This node type is used as a interim node to relay the SRoU traffic, this node MUST initial TWAMP link probe to other Fabric node and report linkstate to KV Store.  |
+|  0x2 | Linecard    | This node type is used to connect existing network, it   could use TWAMP probe other Fabric Node or Linecard node                                                   |
+|-----:|:------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 {: #node role title="Node Role"}
 
 2. SiteID: uint32 number, defined the node which belongs to same site or 

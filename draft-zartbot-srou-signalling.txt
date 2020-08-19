@@ -5,11 +5,11 @@
 SPRING                                                           K. Fang
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Experimental                                      Y. Li
-Expires: 18 February 2021                                   Google, Inc.
+Expires: 20 February 2021                                   Google, Inc.
                                                                   F. Cai
                                                                 X. Jiang
                                                      Cisco Systems, Inc.
-                                                          17 August 2020
+                                                          19 August 2020
 
 
    Distributed KV Store based Routing protocol for SR over UDP(SRoU)
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 February 2021.
+   This Internet-Draft will expire on 20 February 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Fang, et al.            Expires 18 February 2021                [Page 1]
+Fang, et al.            Expires 20 February 2021                [Page 1]
 
 Internet-DrafDistributed KV Store based Routing protocol for August 2020
 
@@ -68,7 +68,7 @@ Table of Contents
      2.1.  Node Label allocation . . . . . . . . . . . . . . . . . .   4
      2.2.  Node registration . . . . . . . . . . . . . . . . . . . .   4
    3.  SRoU Locator and Route  . . . . . . . . . . . . . . . . . . .   4
-   4.  Node Keepalive  . . . . . . . . . . . . . . . . . . . . . . .   5
+   4.  Node Keepalive  . . . . . . . . . . . . . . . . . . . . . . .   4
    5.  Link State  . . . . . . . . . . . . . . . . . . . . . . . . .   5
    6.  Sercurity Key . . . . . . . . . . . . . . . . . . . . . . . .   5
    7.  Overlay Routing . . . . . . . . . . . . . . . . . . . . . . .   5
@@ -76,9 +76,9 @@ Table of Contents
      8.1.  Route control . . . . . . . . . . . . . . . . . . . . . .   6
      8.2.  Access Control  . . . . . . . . . . . . . . . . . . . . .   6
    9.  Distributed KV Store  . . . . . . . . . . . . . . . . . . . .   6
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .   6
    Informative References  . . . . . . . . . . . . . . . . . . . . .   7
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Fang, et al.            Expires 18 February 2021                [Page 2]
+Fang, et al.            Expires 20 February 2021                [Page 2]
 
 Internet-DrafDistributed KV Store based Routing protocol for August 2020
 
@@ -132,43 +132,25 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
    1.  Role: the system contains different node type, role attribute is
        a uint16 value which contains:
 
-           +------+----------+--------------------------------+
-           | Type | Name     | Section                        |
-           +======+==========+================================+
-           |  0x0 | STUN     | This node is used as a STUN    |
-           |      |          | server to help other nodes     |
-           +------+----------+--------------------------------+
-           |      |          | discovery their public         |
-           |      |          | address.This node must deploy  |
-           +------+----------+--------------------------------+
-           |      |          | with a public internet address |
-           |      |          | or behind static 1:1 NAT       |
-           +------+----------+--------------------------------+
-           |  0x1 | Fabric   | This node type is used as a    |
-           |      |          | interim node to relay the      |
-           +------+----------+--------------------------------+
-           |      |          | SRoU traffic, this node MUST   |
-           |      |          | initial TWAMP link probe to    |
-           +------+----------+--------------------------------+
-           |      |          | other Fabric node and report   |
-           |      |          | linkstate to KV Store.         |
-           +------+----------+--------------------------------+
-           |  0x2 | Linecard | This node type is used to      |
-           |      |          | connect existing network, it   |
-           +------+----------+--------------------------------+
-           |      |          | could use TWAMP probe other    |
-           |      |          | Fabric Node or Linecard node   |
-           +------+----------+--------------------------------+
+     +------+----------+---------------------------------------------+
+     | Type | Name     | Section                                     |
+     +======+==========+=============================================+
+     |  0x0 | STUN     | This node is used as a STUN server to help  |
+     |      |          | other nodes discovery their public          |
+     |      |          | address.This node must deploy with a public |
+     |      |          | internet address or behind static 1:1 NAT   |
+     +------+----------+---------------------------------------------+
+     |  0x1 | Fabric   | This node type is used as a interim node to |
+     |      |          | relay the SRoU traffic, this node MUST      |
+     |      |          | initial TWAMP link probe to other Fabric    |
+     |      |          | node and report linkstate to KV Store.      |
+     +------+----------+---------------------------------------------+
+     |  0x2 | Linecard | This node type is used to connect existing  |
+     |      |          | network, it could use TWAMP probe other     |
+     |      |          | Fabric Node or Linecard node                |
+     +------+----------+---------------------------------------------+
 
-                            Table 1: Node Role
-
-
-
-
-Fang, et al.            Expires 18 February 2021                [Page 3]
-
-Internet-DrafDistributed KV Store based Routing protocol for August 2020
-
+                             Table 1: Node Role
 
    1.  SiteID: uint32 number, defined the node which belongs to same
        site or Automomous System.
@@ -180,6 +162,13 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
 
    4.  Location: Optional filed.  It contains two float32 value(latitude
        and longitude) to indicate the Geo location.
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 3]
+
+Internet-DrafDistributed KV Store based Routing protocol for August 2020
+
 
 2.1.  Node Label allocation
 
@@ -218,14 +207,6 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
    If the local socket has public address and port information, it could
    be added in the service list.
 
-
-
-
-Fang, et al.            Expires 18 February 2021                [Page 4]
-
-Internet-DrafDistributed KV Store based Routing protocol for August 2020
-
-
    The node MUST update it local servicelist to distributed KV store by:
    Key= "/service/role/systemName" Value= "SRoULocator1,SRoULocator2"
 
@@ -234,6 +215,16 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
    Each KV pair registration MUST have a leasetime and keepalive timer,
    Once the Node out of service and disconnected, the KV store MUST
    withdraw the KV pair after lease timeout.
+
+
+
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 4]
+
+Internet-DrafDistributed KV Store based Routing protocol for August 2020
+
 
 5.  Link State
 
@@ -275,13 +266,6 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
    RouteDistinguish could encode by SystemName + local VNID The overlay
    routing prefix is encoded as below:
 
-
-
-Fang, et al.            Expires 18 February 2021                [Page 5]
-
-Internet-DrafDistributed KV Store based Routing protocol for August 2020
-
-
    Type-2 EVPN Route Key="/route/2/exportRT/RD/MAC/IP"
    Value="VNID/SystemName/PolicyTag"
 
@@ -289,6 +273,14 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
 
    Key="/route/5/exportRT/RD/IPPrefix/IPMask" Value="VNID/SystemName/
    PolicyTag"
+
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 5]
+
+Internet-DrafDistributed KV Store based Routing protocol for August 2020
+
 
    Each of the linecard node could based on import RT list to watch key
    prefix ="/route/2/importRT" and "/route/5/importRT" to sync the
@@ -327,17 +319,6 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
    some on-prem deployment, each of the nodes could act as a ETCD proxy
    to help other node register to KV store.
 
-
-
-
-
-
-
-Fang, et al.            Expires 18 February 2021                [Page 6]
-
-Internet-DrafDistributed KV Store based Routing protocol for August 2020
-
-
 10.  Security Considerations
 
    All of the control connection is TLS based and MUST validate the
@@ -349,6 +330,13 @@ Acknowledgements
 
    The following people provided substantial contributions to this
    document:
+
+
+
+Fang, et al.            Expires 20 February 2021                [Page 6]
+
+Internet-DrafDistributed KV Store based Routing protocol for August 2020
+
 
    *  Yijen Wang, Cisco Systems, Inc.
 
@@ -386,14 +374,6 @@ Authors' Addresses
    Xing Jiang
    Cisco Systems, Inc.
 
-
-
-
-Fang, et al.            Expires 18 February 2021                [Page 7]
-
-Internet-DrafDistributed KV Store based Routing protocol for August 2020
-
-
    Email: jamjiang@cisco.com
 
 
@@ -409,40 +389,4 @@ Internet-DrafDistributed KV Store based Routing protocol for August 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Fang, et al.            Expires 18 February 2021                [Page 8]
+Fang, et al.            Expires 20 February 2021                [Page 7]
